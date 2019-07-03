@@ -75,7 +75,7 @@ public class ProductDAO {
 
 
 
-    public Product delete (long id) {
+    public void delete (long id) {
 
         try(Connection connection = getConnection(); Statement statement = connection.createStatement()){
 
@@ -87,8 +87,6 @@ public class ProductDAO {
             System.err.println("Something went wrong");
             e.printStackTrace();
         }
-
-        return null;
     }
 
     private Connection getConnection () throws SQLException {
