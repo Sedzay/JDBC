@@ -1,3 +1,5 @@
+package lesson1;
+
 import java.sql.*;
 import java.util.Date;
 
