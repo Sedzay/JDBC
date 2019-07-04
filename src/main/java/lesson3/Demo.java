@@ -9,9 +9,9 @@ public class Demo {
         //productDAO.save(product);
 
         //productDAO.update(product);
-        System.out.println(productDAO.getProducts());
+        //System.out.println(productDAO.getProducts());
 
-        productDAO.delete(10);
+        //productDAO.delete(10);
         System.out.println(productDAO.getProducts());
 
     }
