@@ -9,7 +9,7 @@ public class Solution {
     private static final String DB_URL = "jdbc:oracle:thin:@gromcode-lessons.ccepy0l4ctc8.us-east-2.rds.amazonaws.com:1521:ORCL";
 
     private static final String USER = "main";
-    private static final String PASS = "EkimovSergej";
+    private static final String PASS = "TQZvd36H";
 
     //findProductsByPrice(int price, int delta) - будет искать продукты с заданной ценной
     // в диапазоне +=delta включительно. Например, если нужно найти продукты с ценой 100 и дельтой 10,
@@ -18,9 +18,13 @@ public class Solution {
     public List<Product> findProductsByPrice(int price, int delta) {
 
         try (Connection connection = getConnection();
-             Statement statement = connection.createStatement()) {
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM PRODUCT WHERE price >= (? - ?) AND price <= (? + ?)")) {
 
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM PRODUCT WHERE price >= " + (price - delta) + " AND price <= " + (price + delta));
+            preparedStatement.setInt(1, price);
+            preparedStatement.setInt(2, delta);
+            preparedStatement.setInt(3, price);
+            preparedStatement.setInt(4, delta);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             List<Product> products = new ArrayList<>();
 
@@ -40,15 +44,15 @@ public class Solution {
     // Если word является некоректным (больше одного слова в стринге, длина меньше 3, содержит спецсимволы),
     // выбрасывать ошибку, которая в описании обязательно должна содержать само слово и описание ошибки
     //
-    public List<Product> findProductsByName(String word) throws Exception{
+    public List<Product> findProductsByName(String word) throws Exception {
 
         validationWord(word);
 
-
         try (Connection connection = getConnection();
-             Statement statement = connection.createStatement()) {
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM PRODUCT WHERE name LIKE \'%?%\'")) {
 
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM PRODUCT WHERE name LIKE \'%" + word + "%\'");
+            preparedStatement.setString(1, word);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             List<Product> products = new ArrayList<>();
 
