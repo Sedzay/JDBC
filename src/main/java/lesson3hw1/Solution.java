@@ -9,7 +9,7 @@ public class Solution {
     private static final String DB_URL = "jdbc:oracle:thin:@gromcode-lessons.ccepy0l4ctc8.us-east-2.rds.amazonaws.com:1521:ORCL";
 
     private static final String USER = "main";
-    private static final String PASS = "TQZvd36H";
+    private static final String PASS = "EkimovSergey";
 
     //findProductsByPrice(int price, int delta) - будет искать продукты с заданной ценной
     // в диапазоне +=delta включительно. Например, если нужно найти продукты с ценой 100 и дельтой 10,
