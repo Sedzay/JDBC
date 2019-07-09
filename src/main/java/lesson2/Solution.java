@@ -8,7 +8,7 @@ public class Solution {
     private static final String DB_URL = "jdbc:oracle:thin:@gromcode-lessons.ccepy0l4ctc8.us-east-2.rds.amazonaws.com:1521:ORCL";
 
     private static final String USER = "main";
-    private static final String PASS = "TQZvd36H";
+    private static final String PASS = "EkimovSergej";
 
     //void increasePrice() - увеличивает значение цены на 100, во всех продуктах, где цена меньше 970
 
