@@ -14,7 +14,7 @@ public class Solution {
 
     public void increasePrice() {
 
-        try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS); Statement statement = connection.createStatement()) {
+        try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
 
             int response = statement.executeUpdate("UPDATE PRODUCT SET price = price + 100 WHERE price < 970");
             System.out.println(response);
@@ -49,7 +49,7 @@ public class Solution {
                 newDescription += ".";
             }
 
-            try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS); Statement statement = connection.createStatement()) {
+            try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
 
                 int response = statement.executeUpdate("UPDATE PRODUCT SET description = " + "\'" + newDescription + "\'" + " WHERE " + product.getId() + " = id");
                 System.out.println(response);
@@ -66,7 +66,7 @@ public class Solution {
 
         ArrayList<Product> products = new ArrayList<>();
 
-        try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS); Statement statement = connection.createStatement()) {
+        try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
 
             try (ResultSet resultSet = statement.executeQuery("SELECT ID, NAME, DESCRIPTION, PRICE FROM PRODUCT WHERE LENGTH(DESCRIPTION) > 100")) {
                 while (resultSet.next()) {
@@ -90,4 +90,7 @@ public class Solution {
         return new Product(id, name, description, price);
     }
 
+    private Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(DB_URL, USER, PASS);
+    }
 }
