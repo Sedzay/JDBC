@@ -34,54 +34,46 @@ public class Solution {
         //3. Удалить последнее предложение  +
         //4. Обновить описание в продукте в базе данных  +
 
-        ArrayList<Product> productArrayList = getProductsByDescription();
+        try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
+            ArrayList<Product> productArrayList = getProductsByDescription(statement);
 
-        for (Product product : productArrayList) {
+            for (Product product : productArrayList) {
 
-            String[] allStrings = product.getDescription().split("\\.");
+                String[] allStrings = product.getDescription().split("\\.");
 
-            if (allStrings.length <= 1)
-                continue;
+                if (allStrings.length <= 1)
+                    continue;
 
-            String newDescription = "";
-            for (int i = 0; i < allStrings.length-1; i++) {
-                newDescription += allStrings[i];
-                newDescription += ".";
-            }
-
-            try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
+                String newDescription = "";
+                for (int i = 0; i < allStrings.length - 1; i++) {
+                    newDescription += allStrings[i];
+                    newDescription += ".";
+                }
 
                 int response = statement.executeUpdate("UPDATE PRODUCT SET description = " + "\'" + newDescription + "\'" + " WHERE " + product.getId() + " = id");
                 System.out.println(response);
 
-            } catch (SQLException e) {
-                System.err.println("Something went wrong");
-                e.printStackTrace();
             }
-
-        }
-    }
-
-    private ArrayList<Product> getProductsByDescription() {
-
-        ArrayList<Product> products = new ArrayList<>();
-
-        try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
-
-            try (ResultSet resultSet = statement.executeQuery("SELECT ID, NAME, DESCRIPTION, PRICE FROM PRODUCT WHERE LENGTH(DESCRIPTION) > 100")) {
-                while (resultSet.next()) {
-                    products.add(getProduct(resultSet));
-                }
-            }
-
         } catch (SQLException e) {
             System.err.println("Something went wrong");
             e.printStackTrace();
         }
+    }
+
+    private ArrayList<Product> getProductsByDescription(Statement statement) throws SQLException {
+
+        ArrayList<Product> products = new ArrayList<>();
+
+        ResultSet resultSet = statement.executeQuery("SELECT ID, NAME, DESCRIPTION, PRICE FROM PRODUCT WHERE LENGTH(DESCRIPTION) > 100");
+        while (resultSet.next()) {
+            products.add(getProduct(resultSet));
+        }
+
         return products;
     }
 
     private Product getProduct(ResultSet resultSet) throws SQLException {
+
         long id = resultSet.getLong(1);
         String name = resultSet.getString(2);
         String description = resultSet.getString(3);
@@ -91,6 +83,8 @@ public class Solution {
     }
 
     private Connection getConnection() throws SQLException {
+
         return DriverManager.getConnection(DB_URL, USER, PASS);
     }
+
 }
