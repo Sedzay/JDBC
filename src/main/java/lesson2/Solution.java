@@ -35,8 +35,7 @@ public class Solution {
         //4. Обновить описание в продукте в базе данных  +
 
         try (Connection connection = getConnection(); Statement statement = connection.createStatement()) {
-            ArrayList<Product> productArrayList = getProductsByDescription(statement);
-
+            ArrayList<Product> productArrayList = getProductsByDescription(connection);
             for (Product product : productArrayList) {
 
                 String[] allStrings = product.getDescription().split("\\.");
@@ -60,13 +59,18 @@ public class Solution {
         }
     }
 
-    private ArrayList<Product> getProductsByDescription(Statement statement) throws SQLException {
+    private ArrayList<Product> getProductsByDescription(Connection connection) throws SQLException {
 
         ArrayList<Product> products = new ArrayList<>();
 
-        ResultSet resultSet = statement.executeQuery("SELECT ID, NAME, DESCRIPTION, PRICE FROM PRODUCT WHERE LENGTH(DESCRIPTION) > 100");
-        while (resultSet.next()) {
-            products.add(getProduct(resultSet));
+        try (Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery("SELECT ID, NAME, DESCRIPTION, PRICE FROM PRODUCT WHERE LENGTH(DESCRIPTION) > 100");
+            while (resultSet.next()) {
+                products.add(getProduct(resultSet));
+            }
+        } catch (SQLException e) {
+            System.err.println("Something went wrong");
+            e.printStackTrace();
         }
 
         return products;
